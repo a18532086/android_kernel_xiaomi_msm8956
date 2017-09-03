@@ -380,7 +380,7 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_floor);
 static ssize_t opp_table_show(struct device *dev, struct device_attribute *attr,
 			      char *buf)
 {
-	struct dev_pm_opp *opp;
+	struct opp *opp;
 	ssize_t count = 0;
 	unsigned long freq = 0;
 
