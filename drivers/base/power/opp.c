@@ -377,6 +377,29 @@ struct opp *dev_pm_opp_find_freq_floor(struct device *dev, unsigned long *freq)
 }
 EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_floor);
 
+static ssize_t opp_table_show(struct device *dev, struct device_attribute *attr,
+			      char *buf)
+{
+	struct opp *opp;
+	ssize_t count = 0;
+	unsigned long freq = 0;
+
+	rcu_read_lock();
+	while ((opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
+		if (IS_ERR(opp))
+			break;
+		count += scnprintf(&buf[count], PAGE_SIZE - count, "%lu %lu\n",
+				freq, opp->u_volt);
+		if (count <= 0)
+			break;
+		freq++;
+	}
+	rcu_read_unlock();
+
+	return count;
+}
+static DEVICE_ATTR_RO(opp_table);
+
 /**
  * dev_pm_opp_add()  - Add an OPP table from a table definitions
  * @dev:	device for which we do this operation
@@ -433,6 +456,9 @@ int dev_pm_opp_add(struct device *dev, unsigned long freq, unsigned long u_volt)
 
 		/* Secure the device list modification */
 		list_add_rcu(&dev_opp->node, &dev_opp_list);
+		/*  attribute here */
+		WARN(device_create_file(dev, &dev_attr_opp_table),
+		     "Unable to add opp_table device attribute.\n");
 	}
 
 	/* populate the opp table */
