@@ -550,7 +550,7 @@
 				<6  1747200000>,
 				<7  1804800000>;
 		qcom,cpr-speed-bin-max-corners =
-				<0 0 2 4 6>,
+				<0 0 2 4 7>,
 				<1 0 2 4 7>;
 		qcom,cpr-fuse-version-map =
 		/* <Speed_bits PVS_version CPR_Rev - - -> */
@@ -566,6 +566,10 @@
 		qcom,cpr-voltage-floor-override =
 			<(-1) (-1) 790000 790000 820000 850000
 			940000 990000 990000>;
+		/* UnderVoltage for 8956 */
+		qcom,cpr-voltage-ceiling-override =
+			<(-1) (-1) 860000 860000 940000 990000
+			990000 990000 990000>;
 		qcom,cpr-enable;
 	};
 
